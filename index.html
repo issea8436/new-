@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voting Management System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #b7b68f5b;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      color: #000000;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .candidate {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      padding: 30px 20px;
+      width: 260px;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .candidate:hover {
+      transform: translateY(-5px);
+    }
+
+    .candidate img {
+      width: 160px;
+      height: 140px;
+      object-fit:fill;
+      border-radius: 50%;
+      border: 4px solid #e5e7eb;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      padding: 5px;
+    }
+
+    .vote-btn {
+      background-color: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .vote-btn:hover {
+      background-color: #16a34a;
+    }
+
+    .count {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #111827;
+    }
+
+    .reset-btn,
+    .show-winner-btn {
+      margin-top: 40px;
+      padding: 10px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 20px;
+      color: white;
+    }
+
+    .reset-btn {
+      background-color: #ef4444;
+    }
+
+    .reset-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .show-winner-btn {
+      background-color: #2563eb;
+    }
+
+    .show-winner-btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    #winner-message {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #b45309;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Voting Management System</h1>
+  <div class="container">
+    <div class="candidate" id="cand-a">
+      <img src="wadani.jpg" alt="Xisbiga Xirsi" />
+      <h2>Xirsi Ali Xaaji Hassan</h2>
+      <button class="vote-btn" onclick="vote('a')">Vote</button>
+      <div class="count" id="count-a">Votes: 0</div>
+    </div>
+    <div class="candidate" id="cand-b">
+      <img src="kulmiye.jpg" alt="Xisbiga Kaahin" />
+      <h2>Ina Kaahin</h2>
+      <button class="vote-btn" onclick="vote('b')">Vote</button>
+      <div class="count" id="count-b">Votes: 0</div>
+    </div>
+    <div class="candidate" id="cand-c">
+      <img src="kaah.jpg" alt="Xisbiga Xaashi" />
+      <h2>Maxamuud Xaashi</h2>
+      <button class="vote-btn" onclick="vote('c')">Vote</button>
+      <div class="count" id="count-c">Votes: 0</div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetVotes()">Reset Votes</button>
+  <button class="show-winner-btn" onclick="showWinner()">Show Winner</button>
+  <div id="winner-message"></div>
+
+  <script>
+    let votes = { a: 0, b: 0, c: 0 };
+
+    function vote(candidate) {
+      votes[candidate]++;
+      document.getElementById('count-' + candidate).innerText = "Votes: " + votes[candidate];
+      clearHighlight();
+      document.getElementById('winner-message').innerText = "";
+    }
+
+    function resetVotes() {
+      votes = { a: 0, b: 0, c: 0 };
+      document.getElementById('count-a').innerText = "Votes: 0";
+      document.getElementById('count-b').innerText = "Votes: 0";
+      document.getElementById('count-c').innerText = "Votes: 0";
+      clearHighlight();
+      document.getElementById('winner-message').innerText = "";
+    }
+
+    function clearHighlight() {
+      ['cand-a', 'cand-b', 'cand-c'].forEach(id => {
+        document.getElementById(id).style.border = "none";
+      });
+    }
+
+    function showWinner() {
+      clearHighlight();
+      const maxVotes = Math.max(votes.a, votes.b, votes.c);
+      if (maxVotes === 0) {
+        document.getElementById('winner-message').innerText = "No votes yet.";
+        return;
+      }
+
+      let winners = [];
+      if (votes.a === maxVotes) winners.push('Xirsi Ali Xaaji Hassan');
+      if (votes.b === maxVotes) winners.push('maxamed Kaahin');
+      if (votes.c === maxVotes) winners.push('Maxamuud Xaash Abdi');
+
+      winners.forEach(winner => {
+        if (winner === 'Xirsi Ali Xaaji Hassan') document.getElementById('cand-a').style.border = "3px solid gold";
+        if (winner === 'Ina Kaahin') document.getElementById('cand-b').style.border = "3px solid gold";
+        if (winner === 'Maxamuud Xaashi') document.getElementById('cand-c').style.border = "3px solid gold";
+      });
+
+      if (winners.length === 1) {
+        document.getElementById('winner-message').innerText = `Winner: ${winners[0]} with ${maxVotes} votes!`;
+      } else {
+        document.getElementById('winner-message').innerText = `It's a tie between: ${winners.join(', ')} with ${maxVotes} votes each!`;
+      }
+    }
+  </script>
+</body>
+</html>
